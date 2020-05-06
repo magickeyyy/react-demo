@@ -1,18 +1,20 @@
-import React from 'react';
+import React from 'react'
+import { connect } from 'react-redux'
+import { add, decrease, addAsync } from './redux'
 
-function App(props) {
-	const store = props.store;
-	const add = props.add;
-	const decrease = props.decrease;
-	const addAsync = props.addAsync;
-	return (
-		<div>
-			<h1>现在有机枪{store.getState()}</h1>
-			<button onClick={() => store.dispatch(add())}>add</button>
-			<button onClick={() => store.dispatch(decrease())}>decrease</button>
-			<button onClick={() => store.dispatch(addAsync())}>addAsync</button>
-		</div>
-	);
+class App extends React.Component {
+	render() {
+		return (
+			<div>
+				<h1>现在有机枪{this.props.num}</h1>
+				<button onClick={this.props.add}>add</button>
+				<button onClick={this.props.decrease}>decrease</button>
+				<button onClick={this.props.addAsync}>addAsync</button>
+			</div>
+		);
+	}
 }
-
-export default App;
+function mapStateToProps(state) {
+	return { num: state }
+}
+export default connect(mapStateToProps, { add, decrease, addAsync })(App);

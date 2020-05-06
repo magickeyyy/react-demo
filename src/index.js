@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
 import App from './App';
 
-import store, { add, decrease, addAsync } from './redux'
+import store from './redux'
 
 function render() {
 	ReactDOM.render(
-		<React.StrictMode>
-			<App store={ store } add={add} decrease={decrease} addAsync={addAsync} />
-		</React.StrictMode>,
+		<Provider store={store}>
+			<React.StrictMode>
+				<App />
+			</React.StrictMode>
+		</Provider>,
 		document.getElementById('root')
 	);
 }

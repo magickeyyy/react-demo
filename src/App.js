@@ -2,6 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { add, decrease, addAsync } from './redux'
 
+@connect(
+	state => ({ num: state }),
+	{ add, decrease, addAsync }
+)
 class App extends React.Component {
 	render() {
 		return (
@@ -14,7 +18,5 @@ class App extends React.Component {
 		);
 	}
 }
-function mapStateToProps(state) {
-	return { num: state }
-}
-export default connect(mapStateToProps, { add, decrease, addAsync })(App);
+
+export default App;

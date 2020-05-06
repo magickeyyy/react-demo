@@ -1,26 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App(props) {
+	const store = props.store;
+	const add = props.add;
+	const decrease = props.decrease;
+	const addAsync = props.addAsync;
+	return (
+		<div>
+			<h1>现在有机枪{store.getState()}</h1>
+			<button onClick={() => store.dispatch(add())}>add</button>
+			<button onClick={() => store.dispatch(decrease())}>decrease</button>
+			<button onClick={() => store.dispatch(addAsync())}>addAsync</button>
+		</div>
+	);
 }
 
 export default App;

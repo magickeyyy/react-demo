@@ -1,19 +1,20 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 
+const STATE = 10;
 // 管理action.type
 const ADD = '+';
 const DECREASE = '-';
 
 // reducer:根据action.type操作state&&return新state
-function counter(state, action) {
+function counter(state = STATE, action) {
     switch(action.type) {
         case ADD:
             return ++state;
         case DECREASE:
             return --state;
         default:
-            return 10;
+            return state;
     }
 }
 

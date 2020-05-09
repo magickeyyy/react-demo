@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { add, decrease, addAsync } from './redux'
+import { add, decrease, addAsync } from './counter'
 
 @connect(
-	state => ({ num: state }),
+	state => ({ num: state.counter }),
 	{ add, decrease, addAsync }
 )
 class App extends React.Component {

@@ -6,11 +6,19 @@ const STATE = {
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
 
-function login(state = STATE, { type, payload }) {
+export function auth(state = STATE, { type, payload }) {
     switch(type) {
         case LOGIN:
-            return { ...state, login: true,  username: payload }
+            return { ...state, login: true,  username: payload };
         case LOGOUT:
-            return { ...state, login: false, username: '' }
+            return { ...state, login: false, username: '' };
+        default:
+            return state;
     }
+}
+export function login(payload = {}) {
+    return { type: LOGIN, payload };
+}
+export function logout(payload = {}) {
+    return { type: LOGOUT, payload };
 }

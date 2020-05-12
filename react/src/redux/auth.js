@@ -1,6 +1,8 @@
+import axios from '../request'
 const STATE = {
-    login: false,
+    isAuth: false,
     username: '',
+    role: ''
 }
 
 const LOGIN = 'LOGIN'
@@ -9,16 +11,35 @@ const LOGOUT = 'LOGOUT'
 export function auth(state = STATE, { type, payload }) {
     switch(type) {
         case LOGIN:
-            return { ...state, login: true,  username: payload };
+            return { ...state, isAuth: true,  ...payload };
         case LOGOUT:
-            return { ...state, login: false, username: '' };
+            return state;
         default:
             return state;
     }
 }
-export function login(payload = {}) {
-    return { type: LOGIN, payload };
+function logined(payload) {
+    return { type: LOGIN, payload }
+}
+function logouted(payload) {
+    return { type: LOGOUT, payload }
+}
+export function login(data) {
+    return dispatch => {
+        axios.post('user/login', data)
+            .then(res => {
+                
+            })
+    }
 }
 export function logout(payload = {}) {
     return { type: LOGOUT, payload };
+}
+export function register(data) {
+    return dispatch => {
+        axios.post('user/register', data)
+            .then(res => {
+                
+            })
+    }
 }

@@ -1,31 +1,30 @@
 import React, { Component } from 'react'
 import { WingBlank, WhiteSpace } from 'antd-mobile';
-import { List, InputItem, Button, Toast } from 'antd-mobile';
+import { List, InputItem, Button, Toast, Radio } from 'antd-mobile';
 import Img from '../../components/Img'
-
-const REG = {
-    username: /^[a-zA-Z0-9_-]{4,16}$/,
-    pwd: /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/
-}
-const ERROR_MSG = {
-    username: '用户名必须是4到16位字符，包括字母、数字、下划线、减号',
-    pwd: '密码必须是最少6位字符，包括至少1个大写字母、1个小写字母、1个数字、1个特殊字符'
-}
+import REG from '../../assets/reg'
+import { ROLE } from '../../assets/dictionary'
 
 class Register extends Component {
-    state = {
-        error: {
-            username: false,
-            pwd: false,
-            confirm: false,
-        },
-        form: {
-            username: '',
-            pwd: ''
+    constructor(props) {
+        super(props);
+        this.state = {
+            error: {
+                username: false,
+                pwd: false,
+                repeatpwd: false,
+            },
+            form: {
+                username: '',
+                pwd: '',
+                repeatpwd: '',
+                role: ROLE[1]
+            }
         }
+        this.register = this.register.bind(this);
     }
     onChange = (value, key) => {
-        if(REG[key].test(value)) {
+        if(REG[key].reg.test(value)) {
             this.setState({
                 form: {
                     ...this.state.form,
@@ -51,8 +50,23 @@ class Register extends Component {
     }
     onErrorClick(key) {
         if(this.state.error[key]) {
-            Toast.fail(ERROR_MSG[key])
+            Toast.fail(REG[key].msg[0])
         }
+    }
+    changeRole(value) {
+        this.setState({
+            form: {
+                ...this.state.form,
+                role: value
+            }
+        })
+    }
+    register() {
+        if((!this.state.error.pwd && !this.state.error.repeatpwd) && (this.state.form.pwd !== this.state.form.repeatpwd)) {
+            Toast.fail('输入的确认密码和密码不一致');
+            return;
+        }
+        console.log(this.state.form)
     }
     render() {
         return (
@@ -61,21 +75,42 @@ class Register extends Component {
                 <Img></Img>
                 <WhiteSpace size="lg"></WhiteSpace>
                 <List>
-                    <InputItem type="text" placeholder="请输入用户名"
-                        clear={true} onChange={value=>this.onChange(value,'username')}
+                    <InputItem type="text" 
+                        placeholder="请输入用户名"
+                        clear
+                        onChange={value=>this.onChange(value,'username')}
                         onErrorClick={this.onErrorClick.bind(this,'username')}
                         error={this.state.error.username}>用户名：</InputItem>
                 </List>
                 <List>
-                    <InputItem type="password" placeholder="请输入密码"
-                        clear={true} onChange={value=>this.onChange(value,'pwd')}
+                    <InputItem type="password" 
+                        placeholder="请输入密码"
+                        clear 
+                        onChange={value=>this.onChange(value,'pwd')}
                         onErrorClick={this.onErrorClick.bind(this,'pwd')}
                         error={this.state.error.pwd}>密&emsp;码：</InputItem>
                 </List>
+                <List>
+                    <InputItem type="password" 
+                        placeholder="请确认密码"
+                        clear
+                        onChange={value=>this.onChange(value,'repeatpwd')}
+                        onErrorClick={this.onErrorClick.bind(this,'repeatpwd')}
+                        error={this.state.error.repeatpwd}>确认密码：</InputItem>
+                </List>
                 <WhiteSpace size="lg"></WhiteSpace>
-                <Button type="primary" onClick={this.login}>登录</Button>
+                <List>
+                    <Radio.RadioItem value={ROLE[0]} 
+                        onChange={this.changeRole.bind(this, ROLE[0])}
+                        checked={this.state.form.role===ROLE[0]}>牛人</Radio.RadioItem>
+                </List>
+                <List>
+                    <Radio.RadioItem value={ROLE[1]}
+                        onChange={this.changeRole.bind(this, ROLE[1])} 
+                        checked={this.state.form.role===ROLE[1]}>BOSS</Radio.RadioItem>
+                </List>
                 <WhiteSpace size="lg"></WhiteSpace>
-                <Button type="primary" onClick={this.logout}>注册</Button>
+                <Button type="primary" onClick={this.register}>注册</Button>
             </WingBlank>
         )
     }

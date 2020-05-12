@@ -65,14 +65,18 @@ class Login extends Component {
                 <Img></Img>
                 <WhiteSpace size="lg"></WhiteSpace>
                 <List>
-                    <InputItem type="text" placeholder="请输入用户名"
-                        clear={true} onChange={value=>this.onChange(value,'username')}
+                    <InputItem type="text" 
+                        placeholder="请输入用户名"
+                        clear={true} 
+                        onChange={value=>this.onChange(value,'username')}
                         onErrorClick={this.onErrorClick.bind(this,'username')}
                         error={this.state.error.username}>用户名：</InputItem>
                 </List>
                 <List>
-                    <InputItem type="password" placeholder="请输入密码"
-                        clear={true} onChange={value=>this.onChange(value,'pwd')}
+                    <InputItem type="password" 
+                        placeholder="请输入密码"
+                        clear={true} 
+                        onChange={value=>this.onChange(value,'pwd')}
                         onErrorClick={this.onErrorClick.bind(this,'pwd')}
                         error={this.state.error.pwd}>密&emsp;码：</InputItem>
                 </List>

@@ -4,6 +4,7 @@ import { List, InputItem, Button, Toast, Radio } from 'antd-mobile';
 import Img from '../../components/Img'
 import REG from '../../assets/reg'
 import { ROLE } from '../../assets/dictionary'
+import axios from '../../request'
 
 class Register extends Component {
     constructor(props) {
@@ -22,6 +23,7 @@ class Register extends Component {
             }
         }
         this.register = this.register.bind(this);
+        this.queryUsername = this.queryUsername.bind(this);
     }
     onChange = (value, key) => {
         if(REG[key].reg.test(value)) {
@@ -62,11 +64,34 @@ class Register extends Component {
         })
     }
     register() {
+        for(let key in this.state.error) {
+            if(this.state.error[key]) {
+                Toast.fail(REG[key].msg[0]);
+                return;
+            }
+        }
+        for(let key in this.state.form) {
+            if(!this.state.form[key]) return
+        }
         if((!this.state.error.pwd && !this.state.error.repeatpwd) && (this.state.form.pwd !== this.state.form.repeatpwd)) {
             Toast.fail('输入的确认密码和密码不一致');
             return;
         }
-        console.log(this.state.form)
+        const { username, pwd, role } = this.state.form;
+        axios
+            .post('/user/register', { username, pwd, role })
+            .then(res => {
+                console.log(res)
+            })
+    }
+    queryUsername() {
+        axios
+            .get('/user/username', { username: this.state.form.username })
+            .then(res => {
+                if(res.success && res.data) {
+                    Toast.fail('用户名已存在')
+                }
+            })
     }
     render() {
         return (
@@ -80,6 +105,7 @@ class Register extends Component {
                         clear
                         onChange={value=>this.onChange(value,'username')}
                         onErrorClick={this.onErrorClick.bind(this,'username')}
+                        onBlur={this.queryUsername}
                         error={this.state.error.username}>用户名：</InputItem>
                 </List>
                 <List>

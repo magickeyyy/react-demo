@@ -10,13 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parse": "^0.1.0",
+    "body-parser": "^1.19.0",
     "colors": "^1.4.0",
-    "cookie-parse": "^0.4.0",
+    "cookie-parser": "^1.4.5",
+    "crypto-js": "^4.0.0",
     "express": "^4.17.1",
-    "md5": "^2.2.1",
+    "express-jwt": "^5.3.3",
     "mongoose": "^5.9.11",
-    "utility": "^1.16.3",
+    "socket.io": "^2.3.0",
+    "swagger-ui-express": "^4.1.4",
     "uuid": "^8.0.0"
   }
 }

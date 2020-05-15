@@ -11,7 +11,6 @@ axios.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
-	console.log(111,response)
 	// 正常响应
 	if(response.status === 200) {
 		return response.data;
@@ -22,4 +21,24 @@ axios.interceptors.response.use(function (response) {
 	return Promise.reject(error);
 });
 
-export default axios
+export default {
+	get(url, data = {}, config = {}) {
+		return axios.get(url, { params: data, ...config })
+	},
+	post(url, data = {}, config = {}) {
+		return axios.post(url, data, config)
+	},
+	delete(url, data = {}, config = {}) {
+		// 后台可以从body中获取参数，如果要从URL中获取return axios.delete(url, { ...config, params: data })，或者return axios.delete(url, { ...config, params: data, data })
+		return axios.delete(url, { data, ...config })
+	},
+	put(url, data = {}, config = {}) {
+		return axios.put(url, data, config)
+	},
+	patch(url, data = {}, config = {}) {
+		return axios.patch(url, data, config)
+	},
+	request(config) {
+		return axios(config)
+	},
+}

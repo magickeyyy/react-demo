@@ -18,28 +18,28 @@ export function auth(state = STATE, { type, payload }) {
             return state;
     }
 }
-function logined(payload) {
-    return { type: LOGIN, payload }
-}
-function logouted(payload) {
-    return { type: LOGOUT, payload }
-}
+
 export function login(data) {
     return dispatch => {
         axios.post('user/login', data)
             .then(res => {
-                
+                dispatch({ type: LOGIN, payload: res.data })
             })
     }
 }
-export function logout(payload = {}) {
-    return { type: LOGOUT, payload };
+export function logout(data) {
+    return dispatch => {
+        axios.post('user/logout', data)
+            .then(res => {
+                dispatch({ type: LOGOUT })
+            })
+    }
 }
 export function register(data) {
     return dispatch => {
         axios.post('user/register', data)
             .then(res => {
-                
+                dispatch({ type: LOGIN, payload: res.data })
             })
     }
 }

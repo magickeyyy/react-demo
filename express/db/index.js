@@ -25,11 +25,18 @@ db.on('disconnected', function () {
     console.log('数据库断开连接'.red);
 });
 
-// const Users = mongoose.model('users', new mongoose.Schema({
-//     name: { type: String, required: true },
-//     username: { type: String, required: true },
-//     phone: { type: String, required: true }
-// }));
+const Users = mongoose.model('users', new mongoose.Schema({
+    name: { type: String }, // 用户真名
+    username: { type: String, required: true }, // 用户名
+    pwd: { type: String, required: true }, // 密码
+    phone: { type: String }, // 手机号
+    role: { type: String, required: true }, // 角色：老板、求职者
+    avatar: { type: String }, // 头像
+    desc: { type: String }, // 个人简介
+    title: { type: String }, // 招聘或求职岗位名称
+    company: { type: String }, // boss所在公司名
+    money: { type: Number }, // boss给的薪资
+}));
 // let user = new Users({
 //     name: '朱庆文',
 //     username: 'magickeyyy',
@@ -38,3 +45,6 @@ db.on('disconnected', function () {
 // user.save(function (error, doc) {
 //     if (error) return console.error('user.save-error',error);
 // });
+module.exports = {
+    Users
+}

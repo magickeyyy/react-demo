@@ -5,7 +5,13 @@ import Img from '../../components/Img'
 import REG from '../../assets/reg'
 import { ROLE } from '../../assets/dictionary'
 import axios from '../../request'
+import { connect } from 'react-redux';
+import { register } from '../../redux/auth'
 
+@connect(
+    state => ({ role: state.auth.role }),
+    { register }
+)
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -78,10 +84,11 @@ class Register extends Component {
             return;
         }
         const { username, pwd, role } = this.state.form;
-        axios
-            .post('/user/register', { username, pwd, role })
+        this.props.register({ username, pwd, role })
             .then(res => {
-                console.log(res)
+                if(res) {
+                    this.props.history.push(this.props.role.toLowerCase())
+                }
             })
     }
     queryUsername() {

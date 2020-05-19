@@ -1,19 +1,21 @@
 import axios from '../request'
+
 const STATE = {
     isAuth: false,
     username: '',
-    role: ''
+    role: '',
+    avatar: '',
+    userid: ''
 }
-
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
 
 export function auth(state = STATE, { type, payload }) {
     switch(type) {
         case LOGIN:
-            return { ...state, isAuth: true,  ...payload };
+            return { ...state, ...payload, isAuth: true };
         case LOGOUT:
-            return state;
+            return STATE;
         default:
             return state;
     }
@@ -29,7 +31,7 @@ export function login(data) {
 }
 export function logout(data) {
     return dispatch => {
-        axios.post('user/logout', data)
+        axios.get('user/logout', data)
             .then(res => {
                 dispatch({ type: LOGOUT })
             })
@@ -37,9 +39,10 @@ export function logout(data) {
 }
 export function register(data) {
     return dispatch => {
-        axios.post('user/register', data)
+        return axios.post('user/register', data)
             .then(res => {
-                dispatch({ type: LOGIN, payload: res.data })
+                if(res.success) dispatch({ type: LOGIN, payload: res.data })
+                return res.success;
             })
     }
 }

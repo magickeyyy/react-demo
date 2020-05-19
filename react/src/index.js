@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import store from './redux'
 import Login from './pages/login/Login'
 import Register from './pages/register/Register'
+import BossInfo from './pages/personal/BossInfo'
 import NotFound from './pages/error/NotFound'
 import AuthRoute from './components/AuthRoute'
 
@@ -17,6 +18,7 @@ ReactDOM.render(
 				<Switch>
 					<Route path="/login" component={Login}></Route>
 					<Route path="/register" component={Register}></Route>
+					<Route path='/bossinfo' component={BossInfo}></Route>
 					<Route path="*" component={NotFound}></Route>
 				</Switch>
 			</Router>

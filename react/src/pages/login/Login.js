@@ -2,15 +2,8 @@ import React, { Component } from 'react'
 import { WingBlank, WhiteSpace } from 'antd-mobile';
 import { List, InputItem, Button, Toast } from 'antd-mobile';
 import Img from '../../components/Img'
-
-const REG = {
-    username: /^[a-zA-Z0-9_-]{4,16}$/,
-    pwd: /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/
-}
-const ERROR_MSG = {
-    username: '用户名必须是4到16位字符，包括字母、数字、下划线、减号',
-    pwd: '密码必须是最少6位字符，包括至少1个大写字母、1个小写字母、1个数字、1个特殊字符'
-}
+import REG from '../../assets/reg'
+import axios from '../../request'
 
 class Login extends Component {
     state = {
@@ -24,7 +17,7 @@ class Login extends Component {
         }
     }
     onChange = (value, key) => {
-        if(REG[key].test(value)) {
+        if(REG[key].reg.test(value)) {
             this.setState({
                 form: {
                     ...this.state.form,
@@ -50,12 +43,17 @@ class Login extends Component {
     }
     onErrorClick(key) {
         if(this.state.error[key]) {
-            Toast.fail(ERROR_MSG[key])
+            Toast.fail(REG[key].msg[0])
         }
     }
     login = () => {
+        axios
+            .post('/user/login', this.state.form)
+            .then(res => {
+                console.log(res)
+            })
     }
-    logout = () => {
+    register = () => {
         this.props.history.push('/register')
     }
     render() {
@@ -83,7 +81,7 @@ class Login extends Component {
                 <WhiteSpace size="lg"></WhiteSpace>
                 <Button type="primary" onClick={this.login}>登录</Button>
                 <WhiteSpace size="lg"></WhiteSpace>
-                <Button type="primary" onClick={this.logout}>注册</Button>
+                <Button type="primary" onClick={this.register}>注册</Button>
             </WingBlank>
         )
     }

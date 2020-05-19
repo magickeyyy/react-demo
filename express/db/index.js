@@ -30,12 +30,13 @@ const Users = mongoose.model('users', new mongoose.Schema({
     username: { type: String, required: true }, // 用户名
     pwd: { type: String, required: true }, // 密码
     phone: { type: String }, // 手机号
-    role: { type: String, required: true }, // 角色：老板、求职者
-    avatar: { type: String }, // 头像
+    role: { type: String, required: true, default: 'STAFF' }, // 角色：老板、求职者
+    avatar: { type: String, default: '' }, // 头像
     desc: { type: String }, // 个人简介
     title: { type: String }, // 招聘或求职岗位名称
     company: { type: String }, // boss所在公司名
     money: { type: Number }, // boss给的薪资
+    userid: String
 }));
 // let user = new Users({
 //     name: '朱庆文',

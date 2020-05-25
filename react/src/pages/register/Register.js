@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import { WingBlank, WhiteSpace } from 'antd-mobile';
 import { List, InputItem, Button, Toast, Radio } from 'antd-mobile';
 import Img from '../../components/Img'
 import REG from '../../assets/reg'
 import { ROLE } from '../../assets/dictionary'
 import axios from '../../request'
-import { connect } from 'react-redux';
+import { api_user } from '../../api'
 import { register } from '../../redux/auth'
 
 @connect(
@@ -87,13 +88,13 @@ class Register extends Component {
         this.props.register({ username, pwd, role })
             .then(res => {
                 if(res) {
-                    this.props.history.push(this.props.role.toLowerCase())
+                    this.props.history.push('/' + this.props.role.toLowerCase() + 'info')
                 }
             })
     }
     queryUsername() {
         axios
-            .get('/user/username', { username: this.state.form.username })
+            .get(api_user.username, { username: this.state.form.username })
             .then(res => {
                 if(res.success && res.data) {
                     Toast.fail('用户名已存在')
@@ -104,7 +105,7 @@ class Register extends Component {
         return (
             <WingBlank>
                 <WhiteSpace size="lg"></WhiteSpace>
-                <Img></Img>
+                <Img src="logo"></Img>
                 <WhiteSpace size="lg"></WhiteSpace>
                 <List>
                     <InputItem type="text" 

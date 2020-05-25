@@ -1,8 +1,10 @@
-const app = require('express')()
+const express = require('express')
+const app = express()
 const colors = require('colors')
 const bodyParser =  require('body-parser')
 const cookieParse = require('cookie-parser')
 
+app.use('/img',express.static('./assets/img'))
 app.use(cookieParse())
 app.use(bodyParser.json())
 app.use(bodyParser.raw())

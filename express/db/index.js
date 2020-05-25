@@ -6,7 +6,8 @@ const CONNECT_OPTION = {
     pass: 'magickeyyy',
     dbName : 'imooc',
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false, // 使用modle或者query的findOneAndUpdate时单独架子啊option里或者在这里加，避免升级后方法报错
 }
 mongoose
     .connect(DB_URL, CONNECT_OPTION)
@@ -35,7 +36,7 @@ const Users = mongoose.model('users', new mongoose.Schema({
     desc: { type: String }, // 个人简介
     title: { type: String }, // 招聘或求职岗位名称
     company: { type: String }, // boss所在公司名
-    money: { type: Number }, // boss给的薪资
+    money: { type: String }, // boss给的薪资
     userid: String
 }));
 // let user = new Users({

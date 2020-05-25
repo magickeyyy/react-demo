@@ -12,11 +12,10 @@ const AvatarSelector = loadable(() => import('../../components/AvatarSelector'))
     store => store.auth,
     { update }
 )
-class BossInfo extends Component {
+class StaffInfo extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            company: '',
             title: '',
             money: '',
             desc: '',
@@ -37,7 +36,7 @@ class BossInfo extends Component {
         const username = Cookies.get('username');
         this.props.update({ ...this.state, userid, username, role })
             .then(res => {
-                this.props.history.push('/staff')
+                this.props.history.push('/boss')
             })
     }
     selectAvatar(value) {
@@ -48,11 +47,8 @@ class BossInfo extends Component {
     render() {
         return (
             <div className={style.info}>
-                <NavBar mode="dark" >BOSS</NavBar>
+                <NavBar mode="dark" >STAFF</NavBar>
                 {this.props.avatar? null: <AvatarSelector selectAvatar={this.selectAvatar} avatar={this.state.avatar}/>}
-                <List>
-                    <InputItem onChange={v=>this.handleChange(v,'company')} placeholder="必填">公司名称</InputItem>
-                </List>
                 <List>
                     <InputItem onChange={v=>this.handleChange(v,'title')} placeholder="必填">职位名称</InputItem>
                 </List>
@@ -60,7 +56,7 @@ class BossInfo extends Component {
                     <InputItem onChange={v=>this.handleChange(v,'money')} placeholder="必填">工资待遇</InputItem>
                 </List>
                 <List>
-                    <TextareaItem onChange={v=>this.handleChange(v,'desc')} placeholder="必填" title="岗位要求" rows={6} count={100}></TextareaItem>
+                    <TextareaItem onChange={v=>this.handleChange(v,'desc')} placeholder="必填" title="个人简介" rows={6} count={100}></TextareaItem>
                 </List>
                 <WingBlank>
                     <WhiteSpace size="xl" />
@@ -71,4 +67,4 @@ class BossInfo extends Component {
     }
 }
 
-export default BossInfo
+export default StaffInfo;

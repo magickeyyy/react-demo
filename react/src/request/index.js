@@ -1,7 +1,9 @@
 import axios from 'axios'
+import { Toast } from 'antd-mobile'
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
+	Toast.loading()
 	// 在发送请求之前做些什么
 	return config;
 }, function (error) {
@@ -11,12 +13,14 @@ axios.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
+	Toast.hide()
 	// 正常响应
 	if(response.status === 200) {
 		return response.data;
 	}
 	return response;
 }, function (error) {
+	Toast.hide()
 	// 对响应错误做点什么
 	return Promise.reject(error);
 });

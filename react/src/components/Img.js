@@ -1,11 +1,11 @@
 import React from 'react'
-import logo from '../assets/img/icon.jpg'
 import style from './Img.module.less'
 
 export default function Img(props) {
+    const img = require(`../assets/img/${props.src}.png`)
     return (
         <div className={style.imgContainer}>
-            <img src={props.img?props.img:logo} alt=""/>
+            <img src={img} width={props.width} height={props.height} alt="img"/>
         </div>
     )
 }

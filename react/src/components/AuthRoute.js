@@ -1,30 +1,36 @@
-import React, { Component } from 'react'
-import axios from '../request/index'
+import React from 'react'
 import { withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
+import Cookies from 'js-cookie'
+import { repairAuthByCookie } from '../redux/auth'
 
+function auth(props) {
+    const userid = Cookies.get('userid');
+    // 第一次进来无cookie无redux，刷新后有cookie无redux
+    if(userid && !props.userid) {
+        props.repairAuthByCookie({})
+        .then(res => {
+            if(!res) {
+                props.history.push('/login')
+            }
+        })
+    }
+    // const reg = /$(\/boss|staff[(info)])|(\/me)|(\msg)$/g;
+}
 @withRouter
 @connect(
-    state => ({ auth: state.auth})
+    state => state.auth,
+    { repairAuthByCookie }
 )
-class AuthRoute extends Component {
+class AuthRoute extends React.Component {
     componentDidMount() {
-        const publicList = [ '/login', '/register' ]
-        if(publicList.indexOf(this.props.location.pathname) > -1) return;
-        if(!this.props.isAuth||!this.props.username) {
-            this.props.history.push('/login')
-        }
-        const { username } = this.props.auth
-        axios
-            .post('/user/info', { username })
-            .then(res => {
-                console.log(res)
-            })
+        auth(this.props)
+    }
+    componentDidUpdate() {
+        auth(this.props)
     }
     render() {
-        return (
-            <div>AuthRoute</div>
-        )
+        return null
     }
 }
 export default AuthRoute

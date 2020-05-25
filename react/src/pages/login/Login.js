@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { WingBlank, WhiteSpace } from 'antd-mobile';
 import { List, InputItem, Button, Toast } from 'antd-mobile';
 import Img from '../../components/Img'
 import REG from '../../assets/reg'
-import axios from '../../request'
+import { login } from '../../redux/auth'
 
+@connect(
+    state => state.auth,
+    { login }
+)
 class Login extends Component {
     state = {
         error: {
@@ -47,10 +52,15 @@ class Login extends Component {
         }
     }
     login = () => {
-        axios
-            .post('/user/login', this.state.form)
+        this.props.login(this.state.form)
             .then(res => {
-                console.log(res)
+                if(res) {
+                    let url = '/' + (this.props.role === 'BOSS'? 'staff': 'boss');
+                    if(!this.props.avatar) {
+                        url = '/' + this.props.role.toLowerCase() + 'info'
+                    }
+                    this.props.history.push(url)
+                }
             })
     }
     register = () => {
@@ -60,7 +70,7 @@ class Login extends Component {
         return (
             <WingBlank>
                 <WhiteSpace size="lg"></WhiteSpace>
-                <Img></Img>
+                <Img src="logo"></Img>
                 <WhiteSpace size="lg"></WhiteSpace>
                 <List>
                     <InputItem type="text" 

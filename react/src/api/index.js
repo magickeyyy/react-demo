@@ -6,5 +6,6 @@ export const api_user = {
     list: '/v1/user/list',
     username: '/v1/user/username',
     update: '/v1/user/update',
-    roleList: '/v1/user/roleList'
+    roleList: '/v1/user/roleList',
+    allinfo: '/v1/user/allinfo'
 }

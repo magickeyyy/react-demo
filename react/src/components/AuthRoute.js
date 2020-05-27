@@ -24,9 +24,11 @@ function auth(props) {
 )
 class AuthRoute extends React.Component {
     componentDidMount() {
+        console.log('mount',Cookies.get(),document.cookie)
         auth(this.props)
     }
     componentDidUpdate() {
+        console.log('update',Cookies.get(),document.cookie)
         auth(this.props)
     }
     render() {

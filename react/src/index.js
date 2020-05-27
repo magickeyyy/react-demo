@@ -10,6 +10,8 @@ import BossInfo from './pages/personal/BossInfo'
 import StaffInfo from './pages/personal/StaffInfo'
 import AuthRoute from './components/AuthRoute'
 import Dashboard from './pages/dashboard/Dashboard'
+import Home from './pages/home/Home'
+import Chat from './pages/chat/Chat'
 
 ReactDOM.render(
 	<Provider store={store}>
@@ -17,10 +19,12 @@ ReactDOM.render(
 			<Router>	
 				<AuthRoute></AuthRoute>
 				<Switch>
+					<Route path="/" exact component={ Home }></Route>
 					<Route path="/login" component={Login}></Route>
 					<Route path="/register" component={Register}></Route>
 					<Route path='/bossinfo' component={BossInfo}></Route>
 					<Route path='/staffinfo' component={StaffInfo}></Route>
+					<Route path='/chat/:user' component={Chat}></Route>
 					<Route component={Dashboard}></Route>
 				</Switch>
 			</Router>

@@ -7,18 +7,18 @@ const { v4: uuidv4 } = require('uuid')
 
 Router.get('/list', (req, res) => {
     // 删除全部user.remove是永久删除不可逆，所以要先find再remove确保万一。delete相对来说效率高
-    Modle.Users.deleteMany({},error => {
-        if(error) {
-            console.error(error)
-        }
-        res.json({ success: true, msg: 'user清理成功' })
-        res.end()
-    })
+    // Modle.Users.deleteMany({},error => {
+    //     if(error) {
+    //         console.error(error)
+    //     }
+    //     res.json({ success: true, msg: 'user清理成功' })
+    //     res.end()
+    // })
 
     // 查找全部user
-    // Modle.Users.find({}, (error, doc) => {
-    //     res.json(doc)
-    // })
+    Modle.Users.find({}, (error, doc) => {
+        res.json(doc)
+    })
     
     // 删除指定username的文档。
     // Modle.Users.findOneAndRemove({ username: req.query.username }, (error, doc) => {
@@ -33,6 +33,15 @@ Router.get('/list', (req, res) => {
     // })
 })
 Router.post('/info', (req, res) => {
+    if(!req.cookies.userid) {
+        res
+            .status(404)
+            .json({
+                success: false,
+                msg: '请求未授权'
+            })
+        return;
+    }
     const { username, userid } = req.cookies;
     Modle.Users
         .findOne()
@@ -50,6 +59,42 @@ Router.post('/info', (req, res) => {
                     success: true,
                     msg: ' 查询成功',
                     data: { username, userid, role, avatar }
+                })
+            } else {
+                res.json({
+                    success: false,
+                    msg: '用户信息错误',
+                })
+            }
+        })
+})
+Router.post('/allinfo', (req, res) => {
+    if(!req.cookies.userid) {
+        res
+            .status(404)
+            .json({
+                success: false,
+                msg: '请求未授权'
+            })
+        return;
+    }
+    const { username, userid } = req.cookies;
+    Modle.Users
+        .findOne()
+        .and({ username, userid })
+        .exec((error, doc) => {
+            if(error) {
+                res.json({
+                    success: false,
+                    msg: '后台出错了',
+                })
+            }
+            if(doc) {
+                const { username, userid, title, money, company, role, desc, avatar } = doc;
+                res.json({
+                    success: true,
+                    msg: ' 查询成功',
+                    data: { username, userid, title, money, company, role, desc, avatar }
                 })
             } else {
                 res.json({
@@ -152,8 +197,8 @@ Router.post('/login', async (req, res) => {
             if(doc) {
                 const { username, userid, role, avatar } = doc
                 res
-                    .cookie('userid', userid)
-                    .cookie('username', username)
+                    .cookie('userid', userid, { httpOnly: true, maxAge: 1000*60*60*24, sameSite: 'lax' })
+                    .cookie('username', username, { httpOnly: true, maxAge: 1000*60*60*24, sameSite: 'lax' })
                     .json({
                         success: true,
                         msg: '登录成功',
@@ -168,7 +213,8 @@ Router.post('/login', async (req, res) => {
         })
     })
 Router.get('/logout', (req, res) => {
-    res
+    if(req.cookies.userid && req.cookies.username) {
+        res
         .clearCookie('userid')
         .clearCookie('username')
         .json({
@@ -176,9 +222,26 @@ Router.get('/logout', (req, res) => {
             msg: '退出成功',
         })
         .end()
+    } else {
+        res
+            .status(404)
+            .json({
+                success: false,
+                msg: 'cookie不合法'
+            })
+    }
 })
 // 修改个人信息接口：根据role上传不同字段
 Router.post('/update', (req, res) => {
+    if(!req.cookies.userid) {
+        res
+            .status(404)
+            .json({
+                success: false,
+                msg: '请求未授权'
+            })
+        return;
+    }
     const { username, userid, role, avatar='', title='', company='', desc='', money='' } = req.body;
     let update = { avatar, title, company, desc, money };
     if(role === 'STAFF') {

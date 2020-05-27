@@ -13,7 +13,6 @@ const UPDATE = 'UPDATE'
 const REPAIR = 'REPAIR'
 
 export function auth(state = STATE, { type, payload }) {
-    console.log(type, payload)
     switch(type) {
         case LOGIN:
             return { ...state, ...payload };
@@ -40,12 +39,13 @@ export function login(data) {
                             })
         
 }
-export function logout(data) {
+export function logout() {
     return dispatch => {
-        axios.get(api_user.logout, data)
-            .then(res => {
-                dispatch({ type: LOGOUT })
-            })
+        return axios
+                    .get(api_user.logout)
+                    .then(res => {
+                        dispatch({ type: LOGOUT })
+                    })
     }
 }
 export function register(data) {

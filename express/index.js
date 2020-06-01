@@ -1,17 +1,20 @@
+const path = require('path')
 const express = require('express')
-const app = express()
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const { websocket, app, listen } = require('./utils/socket')
 const colors = require('colors')
 const bodyParser =  require('body-parser')
 const cookieParse = require('cookie-parser')
 
+listen();
+websocket();
 
 app.all('*', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    // res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-    res.header('Content-Type', 'application/json;charset=utf-8');
+    res.set({
+        "Access-Control-Allow-Origin": "http://localhost:3000", // 允许跨域请求的origin
+        "Access-Control-Allow-Methods": "PUT,POST,GET,DELETE,OPTIONS", // 允许跨域请求使用的方法
+        "Access-Control-Allow-Headers": "Content-Type,Content-Length,Authorization,Accept,X-Requested-With", // 允许跨域请求的headers的字段。https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
+        "Content-Type": "application/json;charset=utf-8"
+    })
     next();
 });
 
@@ -20,14 +23,6 @@ app.use(cookieParse())
 app.use(bodyParser.json())
 app.use(bodyParser.raw())
 const userRouter = require('./routes/v1/user')
+const chatRouter = require('./routes/v1/chat')
 app.use('/v1/user',userRouter)
-io.on('connection', socket => { 
-    socket.on('sendmsg', data => {
-        console.log(data)
-        io.emit('recvmsg', data)
-    })
- });
-
-server.listen(3001, () => {
-    console.log('app is started at http://localhost:3001'.green)
-})
+app.use('/v1/chat',chatRouter)

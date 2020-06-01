@@ -1,13 +1,13 @@
 const express = require('express')
 const Router = express.Router()
-const Modle = require('../../db')
+const Users = require('../../db').Users
 const reg = require('../../utils/reg')
 const { md5Pwd } = require('../../utils/tools')
 const { v4: uuidv4 } = require('uuid')
 
 Router.get('/list', (req, res) => {
     // 删除全部user.remove是永久删除不可逆，所以要先find再remove确保万一。delete相对来说效率高
-    // Modle.Users.deleteMany({},error => {
+    // Users.deleteMany({},error => {
     //     if(error) {
     //         console.error(error)
     //     }
@@ -16,12 +16,12 @@ Router.get('/list', (req, res) => {
     // })
 
     // 查找全部user
-    Modle.Users.find({}, (error, doc) => {
+    Users.find({}, (error, doc) => {
         res.json(doc)
     })
     
     // 删除指定username的文档。
-    // Modle.Users.findOneAndRemove({ username: req.query.username }, (error, doc) => {
+    // Users.findOneAndRemove({ username: req.query.username }, (error, doc) => {
     //     if(error) {
     //         console,log(error)
     //     }
@@ -32,6 +32,7 @@ Router.get('/list', (req, res) => {
     //     }
     // })
 })
+// 查当前登录用户的信息
 Router.post('/info', (req, res) => {
     if(!req.cookies.userid) {
         res
@@ -43,9 +44,45 @@ Router.post('/info', (req, res) => {
         return;
     }
     const { username, userid } = req.cookies;
-    Modle.Users
+    Users
         .findOne()
         .and({ username, userid })
+        .exec((error, doc) => {
+            if(error) {
+                res.json({
+                    success: false,
+                    msg: '后台出错了',
+                })
+            }
+            if(doc) {
+                const { username, userid, role, avatar } = doc;
+                res.json({
+                    success: true,
+                    msg: ' 查询成功',
+                    data: { username, userid, role, avatar }
+                })
+            } else {
+                res.json({
+                    success: false,
+                    msg: '用户信息错误',
+                })
+            }
+        })
+})
+// 根据userid查指定用户的信息
+Router.post('/querydUserInfoById', (req, res) => {
+    if(!req.cookies.userid) {
+        res
+            .status(404)
+            .json({
+                success: false,
+                msg: '请求未授权'
+            })
+        return;
+    }
+    const { userid } = req.body;
+    Users
+        .findOne({ userid })
         .exec((error, doc) => {
             if(error) {
                 res.json({
@@ -79,7 +116,7 @@ Router.post('/allinfo', (req, res) => {
         return;
     }
     const { username, userid } = req.cookies;
-    Modle.Users
+    Users
         .findOne()
         .and({ username, userid })
         .exec((error, doc) => {
@@ -104,14 +141,35 @@ Router.post('/allinfo', (req, res) => {
             }
         })
 })
-Router.post('/register', async (req, res) => {
-    Modle.Users.findOne({ username: req.body.username }, (error, doc) => {
+Router.post('/getUserInfoById', (req, res) => {
+    const userid = req.body.userid;
+    Users.findOne({ userid }, (error, doc) => {
         if(error) {
             res.json({
                 success: false,
                 msg: '后台出错了'
             })
-            .end();
+            return;
+        }
+        if(doc) {
+            const { username, role, avatar } = doc;
+            res
+                .json({
+                    success: true,
+                    msg: '查询成功',
+                    data: { username, role, avatar }
+                })
+        }
+    })
+})
+Router.post('/register', async (req, res) => {
+    Users.findOne({ username: req.body.username }, (error, doc) => {
+        if(error) {
+            res.json({
+                success: false,
+                msg: '后台出错了'
+            })
+            return;
         }
         if(doc) {
             res
@@ -123,7 +181,7 @@ Router.post('/register', async (req, res) => {
                 .end();
         } else {
             const { username, pwd, role } = req.body;
-            const user = new Modle.Users({ username, pwd: md5Pwd(pwd), role, userid: uuidv4() });
+            const user = new Users({ username, pwd: md5Pwd(pwd), role, userid: uuidv4() });
             user.save((error, doc) => {
                 if(error) {
                     res.json({
@@ -153,7 +211,7 @@ Router.post('/register', async (req, res) => {
 Router.get('/username', (req, res) => {
     if(reg.username.reg.test(req.query.username)) { // 先校验参数
         // 是否重名
-        Modle.Users.findOne({ username: req.query.username }, (error, doc) => {
+        Users.findOne({ username: req.query.username }, (error, doc) => {
             if(error) {
                 res.json({
                     success: false,
@@ -184,7 +242,7 @@ Router.get('/username', (req, res) => {
 // 登陆接口：注册时用户名唯一，查到用户名和密码同时匹配时才算登录成功。
 Router.post('/login', async (req, res) => {
     let { username, pwd } = req.body;
-    Modle.Users
+    Users
         .findOne()
         .and({ username, pwd: md5Pwd(pwd) })
         .exec((error, doc) => {
@@ -197,8 +255,8 @@ Router.post('/login', async (req, res) => {
             if(doc) {
                 const { username, userid, role, avatar } = doc
                 res
-                    .cookie('userid', userid, { httpOnly: true, maxAge: 1000*60*60*24, sameSite: 'lax' })
-                    .cookie('username', username, { httpOnly: true, maxAge: 1000*60*60*24, sameSite: 'lax' })
+                    .cookie('userid', userid, { maxAge: 1000*60*60*24 })
+                    .cookie('username', username, { maxAge: 1000*60*60*24 })
                     .json({
                         success: true,
                         msg: '登录成功',
@@ -249,7 +307,7 @@ Router.post('/update', (req, res) => {
     }
     // findeOneAndUpdate{query, update, option, callback}默认不返回更新后的文档，可以配置得到更新的后的文档
     // updateOne callback(error, writeOpResult)
-    Modle.Users.findOneAndUpdate({ $and:[{ userid, username }] }, update, (error, doc) => {
+    Users.findOneAndUpdate({ $and:[{ userid, username }] }, update, (error, doc) => {
         if(error) {
             res.json({
                 success: false,
@@ -273,7 +331,7 @@ Router.post('/update', (req, res) => {
 })
 // 用户查询boss或staff列表
 Router.get('/roleList/:role', (req, res) => {
-    Modle.Users.find({ role: req.params.role.toUpperCase() }, (error, doc) => {
+    Users.find({ role: req.params.role.toUpperCase() }, (error, doc) => {
         if(error) {
             res.json({
                 success: false,

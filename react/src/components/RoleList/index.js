@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Card, WingBlank, WhiteSpace } from 'antd-mobile'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 @connect(
-    store => ({ role: store.auth.role, list: store.chat.roleList, username: store.auth.username })
+    store => ({ role: store.auth.role, list: store.chat.roleList })
 )
+@withRouter
 class RoleList extends Component {
     static propTypes ={
         role: PropTypes.oneOf(['BOSS', 'STAFF']),
@@ -15,8 +17,8 @@ class RoleList extends Component {
         super(props)
         this.toChat = this.toChat.bind(this);
     }
-    toChat() {
-        this.props.history.push(`/chat/${this.props.username}`)
+    toChat(userid) {
+        this.props.history.push(`/chat/${userid}`)
     }
     render() {
         return (
@@ -24,7 +26,7 @@ class RoleList extends Component {
                 {this.props.list.map(v=> (
                     <WingBlank key={v.username}>
                         <WhiteSpace />
-                        <Card onClick={this.toChat}>
+                        <Card onClick={(e)=>this.toChat(v.userid)}>
                             <Card.Header
                                 title={v.username}
                                 thumb={v.avatar}

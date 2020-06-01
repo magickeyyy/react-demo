@@ -15,9 +15,11 @@ class Login extends Component {
         this.props.login(this.props.state.form)
             .then(res => {
                 if(res) {
-                    let url = '/' + (this.props.role === 'BOSS'? 'staff': 'boss');
+                    let url = this.props.role === 'BOSS'? '/staff': '/boss';
                     if(!this.props.avatar) {
-                        url = '/' + this.props.role.toLowerCase() + 'info'
+                        url = this.props.role.toLowerCase() + 'info'
+                    } else {
+                        url = '/dashboard' + url
                     }
                     this.props.history.push(url)
                 }

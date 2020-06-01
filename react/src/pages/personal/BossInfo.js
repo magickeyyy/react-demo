@@ -37,7 +37,7 @@ class BossInfo extends Component {
         const username = Cookies.get('username');
         this.props.update({ ...this.state, userid, username, role })
             .then(res => {
-                this.props.history.push('/staff')
+                this.props.history.push('/dashboard/staff')
             })
     }
     selectAvatar(value) {

@@ -1,0 +1,97 @@
+.container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.list{
+    flex:1;
+    overflow: auto;
+}
+.chatBox{
+    display: flex;
+    margin-top: 10px;
+    >div{
+        min-height: 32px;
+    }
+    .avatar{
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 0 10px;
+    }
+    .text{
+        flex: 1;
+        display: flex;
+        p{ 
+            max-width: 70%;
+            word-wrap: break-word;
+            word-break: break-all;
+            border-radius: 4px;
+            padding: 2px 6px;
+            min-height: 32px;
+            line-height: 26px;
+            align-self: center;
+            position: relative;
+            &::after{
+                display: block;
+                content: "";
+                width: 0;
+                height: 0;
+                border-top: 4px solid transparent;
+                border-bottom: 4px solid transparent;
+                position: absolute;
+                top: 14px;
+            }
+        }
+    }
+}
+.from{
+    flex-direction: row-reverse;
+    .text{
+        flex-direction: row-reverse;
+        p{
+            background-color: #00be2d;
+            &::after{
+                border-left: 8px solid #00be2d;
+                right: -8px;
+            }
+        }
+    }
+}
+.to{
+    flex-direction: row;
+    .text{
+        p{
+            background-color: #fff;
+            &::after{
+                border-right: 8px solid #fff;
+                left: -8px;
+            }
+        }
+    }
+}
+:global {
+    .chat_grid{
+        .am-grid {
+            .slider-frame{
+                touch-action: none;
+            }
+            .am-flexbox {
+                .am-flexbox-item {
+                    .am-grid-item-content {
+                        .am-grid-item-inner-content {
+                            .am-grid-text{
+                                font-size: 20px;
+                                margin-top: 0;
+                            }
+                            .am-grid-icon{
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

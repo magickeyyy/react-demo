@@ -1,18 +1,26 @@
 import React, { Component } from 'react'
-import io from 'socket.io-client'
-const socket = io('ws://localhost:3001')
-socket.on('recvmsg', data => {
-    console.log(data)
-})
+import { connect } from 'react-redux'
+import ChatItem from '../../../components/ChatItem'
 
+@connect(
+    store => ({...store.chatMsg,...store.auth})
+)
 class Msg extends Component {
-    componentDidMount() {
-        socket.emit('sendmsg', {code:12})
-    }
     render() {
+        let msgGroup = {};
+        this.props.chatmsg.map(v => {
+            msgGroup[v.chatid] = msgGroup[v.chatid]||[];
+            msgGroup[v.chatid].push(v);
+            return v;
+        })
+        const chatList = Object.values(msgGroup)
         return (
             <div>
-                Msg
+                {chatList.map((v, i) => {
+                    const last = v[v.length-1]
+                    const opposite = this.props.userid===last.from?last.to:last.from
+                    return <ChatItem key={i} lastMsg={last&&last.content} userid={opposite}></ChatItem>
+                })}
             </div>
         )
     }

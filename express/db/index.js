@@ -39,14 +39,16 @@ const Users = mongoose.model('users', new mongoose.Schema({
     money: { type: String }, // boss给的薪资
     userid: String
 }));
-// let user = new Users({
-//     name: '朱庆文',
-//     username: 'magickeyyy',
-//     phone: '19983504502'
-// })
-// user.save(function (error, doc) {
-//     if (error) return console.error('user.save-error',error);
-// });
+
+const Chat = mongoose.model('chat', new mongoose.Schema({
+    chatid:{'type':String, require:true},
+    from: {'type':String,'require':true},
+    to:{'type':String,'require':true},
+    read:{'type':Boolean,default:false},
+    content:{'type':String,'require':true,'default':''},
+    create_time:{'type':Number,'default':Date.now}
+}))
 module.exports = {
-    Users
+    Users,
+    Chat
 }

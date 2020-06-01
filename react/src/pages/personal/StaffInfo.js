@@ -36,7 +36,7 @@ class StaffInfo extends Component {
         const username = Cookies.get('username');
         this.props.update({ ...this.state, userid, username, role })
             .then(res => {
-                this.props.history.push('/boss')
+                this.props.history.push('/dashboard/boss')
             })
     }
     selectAvatar(value) {

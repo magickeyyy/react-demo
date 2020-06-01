@@ -3,7 +3,7 @@ import { api_user } from '../api'
 
 const STATE = {
     username: '',
-    role: '',
+    role: 'STAFF',
     userid: '',
     avatar: ''
 }

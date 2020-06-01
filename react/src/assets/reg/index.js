@@ -18,7 +18,7 @@ export default {
         ]
     },
     role: {
-        reg: /(BOSS)|(STAFF)/g,
+        reg: /^(BOSS|STAFF)$/g,
         msg: [
             '必填'
         ]

@@ -27,4 +27,10 @@
 /react/build
 !/react
 !/express
+!/react_ts
+!/express_ts
+!/koa
+!/koa_ts
+!/egg
+!/egg_ts
 

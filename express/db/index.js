@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const DB_URL = 'mongodb://127.0.0.1:27017'
+const DB_URL = 'mongodb://localhost:27017'
 const CONNECT_OPTION = {
     keepAlive: true,
-    user: 'admin',
+    user: 'root',
     pass: 'magickeyyy',
     dbName : 'imooc',
     useNewUrlParser: true,
@@ -11,14 +11,18 @@ const CONNECT_OPTION = {
 }
 mongoose
     .connect(DB_URL, CONNECT_OPTION)
-    .then(() => {
-        console.log('数据库连接成功'.green)
-        console.log(mongoose.connection.name)
-    }, error => {
-        console.log('数据库连接失败'.red)
-        console.log(error)
-    })
+    // .connect('mongodb://root:magickeyyy@127.0.0.1:27017/imooc',{
+    //     useNewUrlParser: true,
+    //     useUnifiedTopology: true,
+    //     useFindAndModify: false,
+    // })
 const db = mongoose.connection
+db.on('connecting', () => {
+    console.log('正在连接'.red)
+})
+db.on('connected', () => {
+    console.log('imooc已连接'.green)
+})
 db.on('error', error => {
     console.log('mongo错误'.red, error)
 })

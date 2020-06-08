@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect } from './my_react-redux'
 import { add, decrease, addAsync } from './redux'
 
 @connect(

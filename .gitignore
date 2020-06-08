@@ -21,3 +21,12 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/react/
+/react_ts/
+/express/
+/express_ts/
+/koa/
+/koa_ts/
+/egg/
+/egg_ts/

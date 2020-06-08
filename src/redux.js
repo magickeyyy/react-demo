@@ -1,5 +1,6 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+// import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
+import { createStore, applyMiddleware } from './my_redux'
 
 const STATE = 10;
 // 管理action.type
@@ -14,16 +15,16 @@ function counter(state = STATE, action) {
         case DECREASE:
             return --state;
         default:
-            return state;
+            return 10;
     }
 }
 
 const store = createStore(
-    counter, 
-    compose(
-        applyMiddleware(thunk),
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    )
+    counter, applyMiddleware(thunk)
+    // compose(
+    //     applyMiddleware(thunk),
+    //     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // )
 );
 
 // action creator
